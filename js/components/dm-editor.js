@@ -40,10 +40,12 @@ class DmEditor {
         <h2>Dailymotion 频道配置</h2>
         <div class="header-actions">
           <button class="btn btn-secondary" id="dm-import-json">
-            📁 导入JSON
+            <i data-lucide="folder-input"></i>
+            <span>导入JSON</span>
           </button>
           <button class="btn btn-primary" id="dm-add-btn">
-            + 添加频道
+            <i data-lucide="plus"></i>
+            <span>添加频道</span>
           </button>
         </div>
       </div>
@@ -55,7 +57,9 @@ class DmEditor {
         <div class="modal-content">
           <div class="modal-header">
             <h3 id="dm-modal-title">添加频道</h3>
-            <button class="modal-close" id="dm-modal-close">&times;</button>
+            <button class="modal-close" id="dm-modal-close">
+              <i data-lucide="x"></i>
+            </button>
           </div>
           <div class="modal-body">
             <div class="form-grid">
@@ -80,8 +84,14 @@ class DmEditor {
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" id="dm-cancel-btn">取消</button>
-            <button class="btn btn-primary" id="dm-save-btn">保存</button>
+            <button class="btn btn-secondary" id="dm-cancel-btn">
+              <i data-lucide="x"></i>
+              <span>取消</span>
+            </button>
+            <button class="btn btn-primary" id="dm-save-btn">
+              <i data-lucide="check"></i>
+              <span>保存</span>
+            </button>
           </div>
         </div>
       </div>
@@ -90,6 +100,13 @@ class DmEditor {
     `;
 
         this.bindEvents();
+        this.refreshIcons();
+    }
+
+    refreshIcons() {
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
     }
 
     bindEvents() {
@@ -134,10 +151,12 @@ class DmEditor {
         if (this.channels.length === 0) {
             list.innerHTML = `
         <div class="empty-state">
+          <i data-lucide="play-circle" class="empty-icon"></i>
           <p>暂无频道配置</p>
-          <p class="hint">点击「添加频道」按钮开始配置</p>
+          <p class="hint">点击「添加频道」按钮开始添加 Dailymotion 频道，或导入 JSON 配置文件</p>
         </div>
       `;
+            this.refreshIcons();
             return;
         }
 
@@ -159,11 +178,17 @@ class DmEditor {
           </div>
         </div>
         <div class="source-actions">
-          <button class="btn-icon" onclick="dmEditor.editChannel(${index})" title="编辑">✏️</button>
-          <button class="btn-icon danger" onclick="dmEditor.deleteChannel(${index})" title="删除">🗑️</button>
+          <button class="btn-icon" onclick="dmEditor.editChannel(${index})" title="编辑">
+            <i data-lucide="pencil"></i>
+          </button>
+          <button class="btn-icon danger" onclick="dmEditor.deleteChannel(${index})" title="删除">
+            <i data-lucide="trash-2"></i>
+          </button>
         </div>
       </div>
     `).join('');
+
+        this.refreshIcons();
     }
 
     openModal(index) {

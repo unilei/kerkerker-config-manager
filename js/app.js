@@ -182,35 +182,78 @@ class App {
         try {
             const encrypted = await CryptoModule.encryptConfig(payload, password);
             const base64 = CryptoModule.packageToBase64(encrypted);
+            const encryptedJson = JSON.stringify(encrypted, null, 2);
 
-            // 生成一个简单的数据 URL
-            // 实际使用时，应该将加密数据上传到服务器或 GitHub Pages
-            const subscriptionData = {
-                version: '2.0',
-                data: base64
-            };
+            // 自动检测当前站点 URL
+            const currentUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');
+            const suggestedUrl = `${currentUrl}/data/config.enc.json`;
 
-            // 这里生成一个示例 URL 格式
-            const exampleUrl = `https://your-github-pages.github.io/kerkerker-config-manager/data/config.enc.json`;
+            // 生成 Data URL（可直接使用，无需服务器）
+            const dataUrl = `data:application/json;base64,${btoa(encryptedJson)}`;
+
+            // 生成文件名
+            const filename = `config-${payload.type}-${Date.now()}.enc.json`;
 
             const output = document.getElementById('encrypted-output');
             output.innerHTML = `
-        <div class="output-section">
-          <h4>📋 加密字符串</h4>
-          <textarea readonly class="encrypted-text">${base64}</textarea>
-          <button class="btn btn-secondary btn-sm" onclick="StorageModule.copyToClipboard('${base64}').then(() => App.showToast('已复制', 'success'))">复制</button>
-        </div>
-        <div class="output-section">
-          <h4>🔗 订阅 URL 格式</h4>
-          <p class="hint">将加密文件 (config.enc.json) 上传到 GitHub Pages 后，用户可通过以下格式的 URL 导入：</p>
-          <input type="text" readonly value="${exampleUrl}" class="url-input">
-        </div>
-      `;
+                <div class="output-section">
+                    <h4>📋 加密字符串</h4>
+                    <p class="hint">直接复制此字符串，在 kerkerker 中粘贴导入</p>
+                    <textarea readonly class="encrypted-text" id="encrypted-string-output">${base64}</textarea>
+                    <button class="btn btn-secondary btn-sm" onclick="App.copyText('encrypted-string-output')">📋 复制</button>
+                </div>
+                
+                <div class="output-section">
+                    <h4>🔗 订阅 URL</h4>
+                    <p class="hint">以下是几种分享配置的方式：</p>
+                    
+                    <div class="url-option">
+                        <label>方式一：GitHub Pages URL（推荐）</label>
+                        <p class="hint-small">下载加密文件后，上传到 GitHub Pages 的 data 目录</p>
+                        <div class="url-row">
+                            <input type="text" readonly value="${suggestedUrl}" class="url-input" id="github-pages-url">
+                            <button class="btn btn-secondary btn-sm" onclick="App.copyText('github-pages-url')">复制</button>
+                        </div>
+                        <button class="btn btn-success btn-sm" onclick="StorageModule.downloadFile('${encryptedJson.replace(/'/g, "\\'")}', '${filename}')">
+                            💾 下载配置文件 (${filename})
+                        </button>
+                    </div>
+                    
+                    <div class="url-option">
+                        <label>方式二：Data URL（无需服务器）</label>
+                        <p class="hint-small">直接使用此 URL，无需上传文件，但 URL 较长</p>
+                        <div class="url-row">
+                            <input type="text" readonly value="${dataUrl}" class="url-input" id="data-url">
+                            <button class="btn btn-secondary btn-sm" onclick="App.copyText('data-url')">复制</button>
+                        </div>
+                    </div>
+                    
+                    <div class="url-option">
+                        <label>方式三：其他托管服务</label>
+                        <p class="hint-small">下载配置文件后上传到任意静态文件托管服务（如 Vercel、Netlify、OSS 等）</p>
+                    </div>
+                </div>
+            `;
             output.classList.add('active');
 
             App.showToast('已生成订阅信息', 'success');
         } catch (error) {
             App.showToast('生成失败: ' + error.message, 'error');
+        }
+    }
+
+    // 复制指定元素的内容
+    static copyText(elementId) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            const text = element.value || element.textContent;
+            StorageModule.copyToClipboard(text).then(success => {
+                if (success) {
+                    App.showToast('已复制到剪贴板', 'success');
+                } else {
+                    App.showToast('复制失败', 'error');
+                }
+            });
         }
     }
 

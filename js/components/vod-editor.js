@@ -40,10 +40,12 @@ class VodEditor {
         <h2>VOD 源配置</h2>
         <div class="header-actions">
           <button class="btn btn-secondary" id="vod-import-json">
-            📁 导入JSON
+            <i data-lucide="folder-input"></i>
+            <span>导入JSON</span>
           </button>
           <button class="btn btn-primary" id="vod-add-btn">
-            + 添加源
+            <i data-lucide="plus"></i>
+            <span>添加源</span>
           </button>
         </div>
       </div>
@@ -55,7 +57,9 @@ class VodEditor {
         <div class="modal-content">
           <div class="modal-header">
             <h3 id="vod-modal-title">添加 VOD 源</h3>
-            <button class="modal-close" id="vod-modal-close">&times;</button>
+            <button class="modal-close" id="vod-modal-close">
+              <i data-lucide="x"></i>
+            </button>
           </div>
           <div class="modal-body">
             <div class="form-grid">
@@ -100,8 +104,14 @@ class VodEditor {
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" id="vod-cancel-btn">取消</button>
-            <button class="btn btn-primary" id="vod-save-btn">保存</button>
+            <button class="btn btn-secondary" id="vod-cancel-btn">
+              <i data-lucide="x"></i>
+              <span>取消</span>
+            </button>
+            <button class="btn btn-primary" id="vod-save-btn">
+              <i data-lucide="check"></i>
+              <span>保存</span>
+            </button>
           </div>
         </div>
       </div>
@@ -110,6 +120,13 @@ class VodEditor {
     `;
 
         this.bindEvents();
+        this.refreshIcons();
+    }
+
+    refreshIcons() {
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
     }
 
     bindEvents() {
@@ -154,10 +171,12 @@ class VodEditor {
         if (this.sources.length === 0) {
             list.innerHTML = `
         <div class="empty-state">
+          <i data-lucide="tv" class="empty-icon"></i>
           <p>暂无 VOD 源配置</p>
-          <p class="hint">点击「添加源」按钮开始配置</p>
+          <p class="hint">点击「添加源」按钮开始添加视频源，或导入 JSON 配置文件</p>
         </div>
       `;
+            this.refreshIcons();
             return;
         }
 
@@ -180,12 +199,18 @@ class VodEditor {
             </div>
           </div>
           <div class="source-actions">
-            <button class="btn-icon" onclick="vodEditor.editSource(${originalIndex})" title="编辑">✏️</button>
-            <button class="btn-icon danger" onclick="vodEditor.deleteSource(${originalIndex})" title="删除">🗑️</button>
+            <button class="btn-icon" onclick="vodEditor.editSource(${originalIndex})" title="编辑">
+              <i data-lucide="pencil"></i>
+            </button>
+            <button class="btn-icon danger" onclick="vodEditor.deleteSource(${originalIndex})" title="删除">
+              <i data-lucide="trash-2"></i>
+            </button>
           </div>
         </div>
       `;
         }).join('');
+
+        this.refreshIcons();
     }
 
     openModal(index) {
