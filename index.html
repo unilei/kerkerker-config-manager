@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Kerkerker 配置管理器 - 安全分发 VOD 源和 Dailymotion 频道配置"
+    />
+    <title>Kerkerker 配置管理器</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔐</text></svg>"
+    />
+  </head>
+  <body>
+    <!-- 头部 -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <span class="logo-icon">🔐</span>
+          <h1>Kerkerker 配置管理器</h1>
+          <span class="logo-badge">v2.0</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- 主容器 -->
+    <main class="container">
+      <!-- 标签页 -->
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="vod">📺 VOD 源</button>
+        <button class="tab-btn" data-tab="dm">🎬 Dailymotion</button>
+        <button class="tab-btn" data-tab="export">🔒 加密导出</button>
+      </div>
+
+      <!-- VOD 源面板 -->
+      <div class="tab-panel active" id="vod-panel">
+        <div id="vod-editor"></div>
+      </div>
+
+      <!-- Dailymotion 面板 -->
+      <div class="tab-panel" id="dm-panel">
+        <div id="dm-editor"></div>
+      </div>
+
+      <!-- 加密导出面板 -->
+      <div class="tab-panel" id="export-panel">
+        <div class="export-panel">
+          <div class="export-section">
+            <h3>🔑 加密密码</h3>
+            <div class="form-group">
+              <label>设置加密密码 <span class="required">*</span></label>
+              <div class="password-input-wrapper">
+                <input
+                  type="password"
+                  id="encrypt-password"
+                  placeholder="输入用于加密的密码"
+                />
+              </div>
+              <div class="password-strength">
+                <div class="strength-bar-wrapper">
+                  <div class="strength-bar" id="password-strength-bar"></div>
+                </div>
+                <span class="strength-text" id="password-strength-text"
+                  >请输入密码</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="export-section">
+            <h3>📦 导出类型</h3>
+            <div class="form-group">
+              <select id="export-type">
+                <option value="all">全部配置 (VOD + Dailymotion)</option>
+                <option value="vod">仅 VOD 源</option>
+                <option value="dailymotion">仅 Dailymotion 频道</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="export-section">
+            <h3>👁️ 配置预览</h3>
+            <pre class="config-preview" id="config-preview">
+请先添加配置...</pre
+            >
+          </div>
+
+          <div class="export-section">
+            <h3>🚀 导出操作</h3>
+            <div class="export-actions">
+              <button class="btn btn-primary" id="encrypt-copy-btn">
+                📋 复制加密字符串
+              </button>
+              <button class="btn btn-success" id="encrypt-download-btn">
+                💾 下载加密文件
+              </button>
+              <button class="btn btn-secondary" id="generate-url-btn">
+                🔗 生成订阅信息
+              </button>
+            </div>
+          </div>
+
+          <div id="encrypted-output"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Toast 通知容器 -->
+    <div id="toast-container"></div>
+
+    <!-- 脚本 -->
+    <script src="js/crypto.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/components/vod-editor.js"></script>
+    <script src="js/components/dm-editor.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
