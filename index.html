@@ -96,6 +96,56 @@
           <pre class="config-preview" id="config-preview">请先在 VOD 源或 Dailymotion 标签页添加配置...</pre>
         </div>
 
+        <div class="export-section github-section">
+          <h3><i data-lucide="github"></i> GitHub 设置</h3>
+          <p class="hint">配置 GitHub 仓库信息，实现一键上传配置文件</p>
+          
+          <div class="github-settings-toggle">
+            <button class="btn btn-secondary btn-sm" id="toggle-github-settings">
+              <i data-lucide="settings"></i>
+              <span>配置 GitHub</span>
+            </button>
+            <span class="github-status" id="github-status"></span>
+          </div>
+          
+          <div class="github-settings-form" id="github-settings-form" style="display: none;">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Personal Access Token <span class="required">*</span></label>
+                <input type="password" id="github-token" placeholder="ghp_xxxx...">
+                <p class="hint-small">需要 repo 权限。<a href="https://github.com/settings/tokens/new?scopes=repo&description=kerkerker-config-manager" target="_blank">点击创建 Token</a></p>
+              </div>
+              <div class="form-group">
+                <label>分支</label>
+                <input type="text" id="github-branch" placeholder="main" value="main">
+              </div>
+              <div class="form-group">
+                <label>仓库所有者 <span class="required">*</span></label>
+                <input type="text" id="github-owner" placeholder="your-username">
+              </div>
+              <div class="form-group">
+                <label>仓库名称 <span class="required">*</span></label>
+                <input type="text" id="github-repo" placeholder="kerkerker-config-manager">
+              </div>
+              <div class="form-group full-width">
+                <label>上传路径</label>
+                <input type="text" id="github-path" placeholder="data" value="data">
+                <p class="hint-small">配置文件将上传到此目录</p>
+              </div>
+            </div>
+            <div class="github-settings-actions">
+              <button class="btn btn-secondary btn-sm" id="test-github-btn">
+                <i data-lucide="wifi"></i>
+                <span>测试连接</span>
+              </button>
+              <button class="btn btn-primary btn-sm" id="save-github-btn">
+                <i data-lucide="save"></i>
+                <span>保存设置</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div class="export-section">
           <h3><i data-lucide="rocket"></i> 导出操作</h3>
           <p class="hint">选择一种方式导出你的加密配置</p>
@@ -112,6 +162,10 @@
               <i data-lucide="link"></i>
               <span>生成订阅信息</span>
             </button>
+            <button class="btn btn-github" id="upload-github-btn" disabled>
+              <i data-lucide="upload-cloud"></i>
+              <span>上传到 GitHub</span>
+            </button>
           </div>
         </div>
 
@@ -126,6 +180,7 @@
   <!-- 脚本 -->
   <script src="js/crypto.js"></script>
   <script src="js/storage.js"></script>
+  <script src="js/github.js"></script>
   <script src="js/components/vod-editor.js"></script>
   <script src="js/components/dm-editor.js"></script>
   <script src="js/app.js"></script>

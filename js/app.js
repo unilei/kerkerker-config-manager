@@ -12,7 +12,9 @@ class App {
         this.bindTabEvents();
         this.bindExportEvents();
         this.bindPasswordEvents();
+        this.bindGitHubEvents();
         this.initEditors();
+        this.initGitHubStatus();
         this.showTab('vod');
     }
 
@@ -81,6 +83,11 @@ class App {
         // 实时预览
         document.getElementById('encrypt-password').addEventListener('input', () => {
             this.updatePreview();
+        });
+
+        // 上传到 GitHub
+        document.getElementById('upload-github-btn').addEventListener('click', async () => {
+            await this.uploadToGitHub();
         });
     }
 
@@ -287,6 +294,218 @@ class App {
             }
         }
         return true;
+    }
+
+    /**
+     * GitHub 事件绑定
+     */
+    bindGitHubEvents() {
+        // 切换 GitHub 设置表单显示
+        document.getElementById('toggle-github-settings').addEventListener('click', () => {
+            const form = document.getElementById('github-settings-form');
+            const isVisible = form.style.display !== 'none';
+            form.style.display = isVisible ? 'none' : 'block';
+
+            // 刷新图标
+            lucide.createIcons();
+        });
+
+        // 保存 GitHub 设置
+        document.getElementById('save-github-btn').addEventListener('click', () => {
+            this.saveGitHubSettings();
+        });
+
+        // 测试 GitHub 连接
+        document.getElementById('test-github-btn').addEventListener('click', async () => {
+            await this.testGitHubConnection();
+        });
+    }
+
+    /**
+     * 初始化 GitHub 状态
+     */
+    initGitHubStatus() {
+        const settings = GitHubModule.getSettings();
+
+        // 填充已保存的设置
+        if (settings.token) {
+            document.getElementById('github-token').value = settings.token;
+        }
+        if (settings.owner) {
+            document.getElementById('github-owner').value = settings.owner;
+        }
+        if (settings.repo) {
+            document.getElementById('github-repo').value = settings.repo;
+        }
+        if (settings.branch) {
+            document.getElementById('github-branch').value = settings.branch;
+        }
+        if (settings.path) {
+            document.getElementById('github-path').value = settings.path;
+        }
+
+        // 更新状态显示
+        this.updateGitHubStatus();
+    }
+
+    /**
+     * 更新 GitHub 状态显示
+     */
+    updateGitHubStatus() {
+        const status = document.getElementById('github-status');
+        const uploadBtn = document.getElementById('upload-github-btn');
+
+        if (GitHubModule.isConfigured()) {
+            const settings = GitHubModule.getSettings();
+            status.className = 'github-status connected';
+            status.textContent = `已配置: ${settings.owner}/${settings.repo}`;
+            uploadBtn.disabled = false;
+        } else {
+            status.className = 'github-status disconnected';
+            status.textContent = '未配置';
+            uploadBtn.disabled = true;
+        }
+    }
+
+    /**
+     * 保存 GitHub 设置
+     */
+    saveGitHubSettings() {
+        const token = document.getElementById('github-token').value.trim();
+        const owner = document.getElementById('github-owner').value.trim();
+        const repo = document.getElementById('github-repo').value.trim();
+        const branch = document.getElementById('github-branch').value.trim() || 'main';
+        const path = document.getElementById('github-path').value.trim() || 'data';
+
+        if (!token || !owner || !repo) {
+            App.showToast('请填写 Token、仓库所有者和仓库名称', 'error');
+            return;
+        }
+
+        GitHubModule.saveSettings({ token, owner, repo, branch, path });
+        this.updateGitHubStatus();
+        App.showToast('GitHub 设置已保存', 'success');
+
+        // 隐藏设置表单
+        document.getElementById('github-settings-form').style.display = 'none';
+    }
+
+    /**
+     * 测试 GitHub 连接
+     */
+    async testGitHubConnection() {
+        // 先临时保存设置以便测试
+        const token = document.getElementById('github-token').value.trim();
+        const owner = document.getElementById('github-owner').value.trim();
+        const repo = document.getElementById('github-repo').value.trim();
+        const branch = document.getElementById('github-branch').value.trim() || 'main';
+        const path = document.getElementById('github-path').value.trim() || 'data';
+
+        if (!token || !owner || !repo) {
+            App.showToast('请先填写 Token、仓库所有者和仓库名称', 'error');
+            return;
+        }
+
+        // 临时保存
+        GitHubModule.saveSettings({ token, owner, repo, branch, path });
+
+        const testBtn = document.getElementById('test-github-btn');
+        testBtn.disabled = true;
+        testBtn.querySelector('span').textContent = '测试中...';
+
+        try {
+            const result = await GitHubModule.testConnection();
+            App.showToast(`连接成功! 仓库: ${result.repoName}`, 'success');
+            this.updateGitHubStatus();
+        } catch (error) {
+            App.showToast('连接失败: ' + error.message, 'error');
+        } finally {
+            testBtn.disabled = false;
+            testBtn.querySelector('span').textContent = '测试连接';
+        }
+    }
+
+    /**
+     * 上传到 GitHub
+     */
+    async uploadToGitHub() {
+        const password = document.getElementById('encrypt-password').value;
+        if (!password) {
+            App.showToast('请输入加密密码', 'error');
+            return;
+        }
+
+        if (!GitHubModule.isConfigured()) {
+            App.showToast('请先配置 GitHub 设置', 'error');
+            return;
+        }
+
+        const payload = this.getExportPayload();
+        if (!this.validatePayload(payload)) return;
+
+        const uploadBtn = document.getElementById('upload-github-btn');
+        uploadBtn.disabled = true;
+        uploadBtn.querySelector('span').textContent = '上传中...';
+
+        try {
+            // 加密配置
+            const encrypted = await CryptoModule.encryptConfig(payload, password);
+            const encryptedJson = JSON.stringify(encrypted, null, 2);
+
+            // 生成文件名
+            const filename = `config.enc.json`;
+            const commitMessage = `chore: update encrypted config (${payload.type})`;
+
+            // 上传到 GitHub
+            const result = await GitHubModule.uploadFile(filename, encryptedJson, commitMessage);
+
+            // 显示成功信息和 URL
+            const pagesUrl = GitHubModule.getFileUrl(filename);
+            const rawUrl = GitHubModule.getRawUrl(filename);
+
+            const output = document.getElementById('encrypted-output');
+            output.innerHTML = `
+                <div class="output-section">
+                    <h4>✅ 上传成功!</h4>
+                    <p class="hint">配置文件已上传到 GitHub</p>
+                    
+                    <div class="url-option">
+                        <label>GitHub Pages URL（推荐）</label>
+                        <p class="hint-small">如果启用了 GitHub Pages，可直接使用此 URL</p>
+                        <div class="url-row">
+                            <input type="text" readonly value="${pagesUrl}" class="url-input" id="pages-url">
+                            <button class="btn btn-secondary btn-sm" onclick="App.copyText('pages-url')">复制</button>
+                        </div>
+                    </div>
+                    
+                    <div class="url-option">
+                        <label>Raw URL（直接访问）</label>
+                        <p class="hint-small">无需 GitHub Pages，可直接访问</p>
+                        <div class="url-row">
+                            <input type="text" readonly value="${rawUrl}" class="url-input" id="raw-url">
+                            <button class="btn btn-secondary btn-sm" onclick="App.copyText('raw-url')">复制</button>
+                        </div>
+                    </div>
+                    
+                    <div class="url-option">
+                        <label>GitHub 文件页面</label>
+                        <div class="url-row">
+                            <input type="text" readonly value="${result.url}" class="url-input" id="github-url">
+                            <button class="btn btn-secondary btn-sm" onclick="App.copyText('github-url')">复制</button>
+                            <a href="${result.url}" target="_blank" class="btn btn-secondary btn-sm">打开</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            output.classList.add('active');
+
+            App.showToast('配置已上传到 GitHub!', 'success');
+        } catch (error) {
+            App.showToast('上传失败: ' + error.message, 'error');
+        } finally {
+            uploadBtn.disabled = false;
+            uploadBtn.querySelector('span').textContent = '上传到 GitHub';
+        }
     }
 
     static showToast(message, type = 'info') {
