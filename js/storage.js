@@ -4,6 +4,7 @@
 
 const STORAGE_KEYS = {
     VOD_SOURCES: 'kerkerker_vod_sources',
+    SHORTS_SOURCES: 'kerkerker_shorts_sources',
     DM_CHANNELS: 'kerkerker_dm_channels',
     LAST_PASSWORD_HINT: 'kerkerker_password_hint'
 };
@@ -20,6 +21,21 @@ function saveVodSources(sources) {
  */
 function loadVodSources() {
     const data = localStorage.getItem(STORAGE_KEYS.VOD_SOURCES);
+    return data ? JSON.parse(data) : [];
+}
+
+/**
+ * 保存短剧源配置
+ */
+function saveShortsSources(sources) {
+    localStorage.setItem(STORAGE_KEYS.SHORTS_SOURCES, JSON.stringify(sources));
+}
+
+/**
+ * 加载短剧源配置
+ */
+function loadShortsSources() {
+    const data = localStorage.getItem(STORAGE_KEYS.SHORTS_SOURCES);
     return data ? JSON.parse(data) : [];
 }
 
@@ -71,6 +87,7 @@ function clearAllData() {
 function exportToJson() {
     return {
         vodSources: loadVodSources(),
+        shortsSources: loadShortsSources(),
         dailymotionChannels: loadDmChannels(),
         exportedAt: new Date().toISOString()
     };
@@ -82,6 +99,9 @@ function exportToJson() {
 function importFromJson(json) {
     if (json.vodSources) {
         saveVodSources(json.vodSources);
+    }
+    if (json.shortsSources) {
+        saveShortsSources(json.shortsSources);
     }
     if (json.dailymotionChannels) {
         saveDmChannels(json.dailymotionChannels);
@@ -133,6 +153,8 @@ async function copyToClipboard(text) {
 window.StorageModule = {
     saveVodSources,
     loadVodSources,
+    saveShortsSources,
+    loadShortsSources,
     saveDmChannels,
     loadDmChannels,
     savePasswordHint,

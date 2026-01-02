@@ -20,6 +20,7 @@ class App {
 
     initEditors() {
         window.vodEditor = new VodEditor(document.getElementById('vod-editor'));
+        window.shortsEditor = new ShortsEditor(document.getElementById('shorts-editor'));
         window.dmEditor = new DmEditor(document.getElementById('dm-editor'));
     }
 
@@ -94,6 +95,7 @@ class App {
     getExportPayload() {
         const exportType = document.getElementById('export-type').value;
         const vodSources = vodEditor.getSources();
+        const shortsSources = shortsEditor.getSources();
         const dmChannels = dmEditor.getChannels();
 
         const payload = {
@@ -103,6 +105,9 @@ class App {
 
         if (exportType === 'vod' || exportType === 'all') {
             payload.vodSources = vodSources;
+        }
+        if (exportType === 'shorts' || exportType === 'all') {
+            payload.shortsSources = shortsSources;
         }
         if (exportType === 'dailymotion' || exportType === 'all') {
             payload.dailymotionChannels = dmChannels;
@@ -281,14 +286,19 @@ class App {
             App.showToast('没有 VOD 源可导出', 'error');
             return false;
         }
+        if (payload.type === 'shorts' && (!payload.shortsSources || payload.shortsSources.length === 0)) {
+            App.showToast('没有短剧源可导出', 'error');
+            return false;
+        }
         if (payload.type === 'dailymotion' && (!payload.dailymotionChannels || payload.dailymotionChannels.length === 0)) {
             App.showToast('没有 Dailymotion 频道可导出', 'error');
             return false;
         }
         if (payload.type === 'all') {
             const hasVod = payload.vodSources && payload.vodSources.length > 0;
+            const hasShorts = payload.shortsSources && payload.shortsSources.length > 0;
             const hasDm = payload.dailymotionChannels && payload.dailymotionChannels.length > 0;
-            if (!hasVod && !hasDm) {
+            if (!hasVod && !hasShorts && !hasDm) {
                 App.showToast('没有配置可导出', 'error');
                 return false;
             }

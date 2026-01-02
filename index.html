@@ -1,195 +1,263 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Kerkerker 配置管理器 - 安全分发 VOD 源和 Dailymotion 频道配置">
-  <meta name="theme-color" content="#0a0f1a">
-  <title>Kerkerker 配置管理器</title>
-  
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-  
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236366f1%22 stroke-width=%222%22><rect width=%2218%22 height=%2211%22 x=%223%22 y=%2211%22 rx=%222%22 ry=%222%22/><path d=%22M7 11V7a5 5 0 0 1 10 0v4%22/></svg>">
-</head>
-<body>
-  <!-- 头部 -->
-  <header class="header">
-    <div class="header-content">
-      <div class="logo">
-        <span class="logo-icon"><i data-lucide="shield-check"></i></span>
-        <h1>Kerkerker 配置管理器</h1>
-        <span class="logo-badge">v2.0</span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Kerkerker 配置管理器 - 安全分发 VOD 源和 Dailymotion 频道配置"
+    />
+    <meta name="theme-color" content="#0a0f1a" />
+    <title>Kerkerker 配置管理器</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236366f1%22 stroke-width=%222%22><rect width=%2218%22 height=%2211%22 x=%223%22 y=%2211%22 rx=%222%22 ry=%222%22/><path d=%22M7 11V7a5 5 0 0 1 10 0v4%22/></svg>"
+    />
+  </head>
+  <body>
+    <!-- 头部 -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <span class="logo-icon"><i data-lucide="shield-check"></i></span>
+          <h1>Kerkerker 配置管理器</h1>
+          <span class="logo-badge">v2.0</span>
+        </div>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <!-- 主容器 -->
-  <main class="container">
-    <!-- 标签页 -->
-    <div class="tabs">
-      <button class="tab-btn active" data-tab="vod">
-        <i data-lucide="tv"></i>
-        <span>VOD 源管理</span>
-      </button>
-      <button class="tab-btn" data-tab="dm">
-        <i data-lucide="play-circle"></i>
-        <span>Dailymotion</span>
-      </button>
-      <button class="tab-btn" data-tab="export">
-        <i data-lucide="lock"></i>
-        <span>加密导出</span>
-      </button>
-    </div>
-
-    <!-- VOD 源面板 -->
-    <div class="tab-panel active" id="vod-panel">
-      <div id="vod-editor"></div>
-    </div>
-
-    <!-- Dailymotion 面板 -->
-    <div class="tab-panel" id="dm-panel">
-      <div id="dm-editor"></div>
-    </div>
-
-    <!-- 加密导出面板 -->
-    <div class="tab-panel" id="export-panel">
-      <div class="export-panel">
-        <div class="export-section">
-          <h3><i data-lucide="key-round"></i> 加密密码</h3>
-          <div class="form-group">
-            <label>设置加密密码 <span class="required">*</span></label>
-            <p class="hint">请使用强密码并妥善保管，解密时需要使用相同密码</p>
-            <div class="password-input-wrapper">
-              <input type="password" id="encrypt-password" placeholder="请输入至少 6 位密码">
-            </div>
-            <div class="password-strength">
-              <div class="strength-bar-wrapper">
-                <div class="strength-bar" id="password-strength-bar"></div>
-              </div>
-              <span class="strength-text" id="password-strength-text">请输入密码</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="export-section">
-          <h3><i data-lucide="package"></i> 导出类型</h3>
-          <div class="form-group">
-            <label>选择要导出的配置类型</label>
-            <select id="export-type">
-              <option value="all">全部配置 (VOD + Dailymotion)</option>
-              <option value="vod">仅 VOD 源</option>
-              <option value="dailymotion">仅 Dailymotion 频道</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="export-section">
-          <h3><i data-lucide="eye"></i> 配置预览</h3>
-          <p class="hint">实时显示将要导出的配置内容</p>
-          <pre class="config-preview" id="config-preview">请先在 VOD 源或 Dailymotion 标签页添加配置...</pre>
-        </div>
-
-        <div class="export-section github-section">
-          <h3><i data-lucide="github"></i> GitHub 设置</h3>
-          <p class="hint">配置 GitHub 仓库信息，实现一键上传配置文件</p>
-          
-          <div class="github-settings-toggle">
-            <button class="btn btn-secondary btn-sm" id="toggle-github-settings">
-              <i data-lucide="settings"></i>
-              <span>配置 GitHub</span>
-            </button>
-            <span class="github-status" id="github-status"></span>
-          </div>
-          
-          <div class="github-settings-form" id="github-settings-form" style="display: none;">
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Personal Access Token <span class="required">*</span></label>
-                <input type="password" id="github-token" placeholder="ghp_xxxx...">
-                <p class="hint-small">需要 repo 权限。<a href="https://github.com/settings/tokens/new?scopes=repo&description=kerkerker-config-manager" target="_blank">点击创建 Token</a></p>
-              </div>
-              <div class="form-group">
-                <label>分支</label>
-                <input type="text" id="github-branch" placeholder="main" value="main">
-              </div>
-              <div class="form-group">
-                <label>仓库所有者 <span class="required">*</span></label>
-                <input type="text" id="github-owner" placeholder="your-username">
-              </div>
-              <div class="form-group">
-                <label>仓库名称 <span class="required">*</span></label>
-                <input type="text" id="github-repo" placeholder="kerkerker-config-manager">
-              </div>
-              <div class="form-group full-width">
-                <label>上传路径</label>
-                <input type="text" id="github-path" placeholder="data" value="data">
-                <p class="hint-small">配置文件将上传到此目录</p>
-              </div>
-            </div>
-            <div class="github-settings-actions">
-              <button class="btn btn-secondary btn-sm" id="test-github-btn">
-                <i data-lucide="wifi"></i>
-                <span>测试连接</span>
-              </button>
-              <button class="btn btn-primary btn-sm" id="save-github-btn">
-                <i data-lucide="save"></i>
-                <span>保存设置</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="export-section">
-          <h3><i data-lucide="rocket"></i> 导出操作</h3>
-          <p class="hint">选择一种方式导出你的加密配置</p>
-          <div class="export-actions">
-            <button class="btn btn-primary" id="encrypt-copy-btn">
-              <i data-lucide="clipboard-copy"></i>
-              <span>复制加密字符串</span>
-            </button>
-            <button class="btn btn-success" id="encrypt-download-btn">
-              <i data-lucide="download"></i>
-              <span>下载加密文件</span>
-            </button>
-            <button class="btn btn-secondary" id="generate-url-btn">
-              <i data-lucide="link"></i>
-              <span>生成订阅信息</span>
-            </button>
-            <button class="btn btn-github" id="upload-github-btn" disabled>
-              <i data-lucide="upload-cloud"></i>
-              <span>上传到 GitHub</span>
-            </button>
-          </div>
-        </div>
-
-        <div id="encrypted-output"></div>
+    <!-- 主容器 -->
+    <main class="container">
+      <!-- 标签页 -->
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="vod">
+          <i data-lucide="tv"></i>
+          <span>VOD 源管理</span>
+        </button>
+        <button class="tab-btn" data-tab="shorts">
+          <i data-lucide="film"></i>
+          <span>短剧源</span>
+        </button>
+        <button class="tab-btn" data-tab="dm">
+          <i data-lucide="play-circle"></i>
+          <span>Dailymotion</span>
+        </button>
+        <button class="tab-btn" data-tab="export">
+          <i data-lucide="lock"></i>
+          <span>加密导出</span>
+        </button>
       </div>
-    </div>
-  </main>
 
-  <!-- Toast 通知容器 -->
-  <div id="toast-container"></div>
+      <!-- VOD 源面板 -->
+      <div class="tab-panel active" id="vod-panel">
+        <div id="vod-editor"></div>
+      </div>
 
-  <!-- 脚本 -->
-  <script src="js/crypto.js"></script>
-  <script src="js/storage.js"></script>
-  <script src="js/github.js"></script>
-  <script src="js/components/vod-editor.js"></script>
-  <script src="js/components/dm-editor.js"></script>
-  <script src="js/app.js"></script>
-  
-  <!-- 初始化 Lucide Icons -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      lucide.createIcons();
-    });
-  </script>
-</body>
+      <!-- 短剧源面板 -->
+      <div class="tab-panel" id="shorts-panel">
+        <div id="shorts-editor"></div>
+      </div>
+
+      <!-- Dailymotion 面板 -->
+      <div class="tab-panel" id="dm-panel">
+        <div id="dm-editor"></div>
+      </div>
+
+      <!-- 加密导出面板 -->
+      <div class="tab-panel" id="export-panel">
+        <div class="export-panel">
+          <div class="export-section">
+            <h3><i data-lucide="key-round"></i> 加密密码</h3>
+            <div class="form-group">
+              <label>设置加密密码 <span class="required">*</span></label>
+              <p class="hint">请使用强密码并妥善保管，解密时需要使用相同密码</p>
+              <div class="password-input-wrapper">
+                <input
+                  type="password"
+                  id="encrypt-password"
+                  placeholder="请输入至少 6 位密码"
+                />
+              </div>
+              <div class="password-strength">
+                <div class="strength-bar-wrapper">
+                  <div class="strength-bar" id="password-strength-bar"></div>
+                </div>
+                <span class="strength-text" id="password-strength-text"
+                  >请输入密码</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="export-section">
+            <h3><i data-lucide="package"></i> 导出类型</h3>
+            <div class="form-group">
+              <label>选择要导出的配置类型</label>
+              <select id="export-type">
+                <option value="all">
+                  全部配置 (VOD + 短剧源 + Dailymotion)
+                </option>
+                <option value="vod">仅 VOD 源</option>
+                <option value="shorts">仅短剧源</option>
+                <option value="dailymotion">仅 Dailymotion 频道</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="export-section">
+            <h3><i data-lucide="eye"></i> 配置预览</h3>
+            <p class="hint">实时显示将要导出的配置内容</p>
+            <pre class="config-preview" id="config-preview">
+请先在 VOD 源或 Dailymotion 标签页添加配置...</pre
+            >
+          </div>
+
+          <div class="export-section github-section">
+            <h3><i data-lucide="github"></i> GitHub 设置</h3>
+            <p class="hint">配置 GitHub 仓库信息，实现一键上传配置文件</p>
+
+            <div class="github-settings-toggle">
+              <button
+                class="btn btn-secondary btn-sm"
+                id="toggle-github-settings"
+              >
+                <i data-lucide="settings"></i>
+                <span>配置 GitHub</span>
+              </button>
+              <span class="github-status" id="github-status"></span>
+            </div>
+
+            <div
+              class="github-settings-form"
+              id="github-settings-form"
+              style="display: none"
+            >
+              <div class="form-grid">
+                <div class="form-group">
+                  <label
+                    >Personal Access Token
+                    <span class="required">*</span></label
+                  >
+                  <input
+                    type="password"
+                    id="github-token"
+                    placeholder="ghp_xxxx..."
+                  />
+                  <p class="hint-small">
+                    需要 repo 权限。<a
+                      href="https://github.com/settings/tokens/new?scopes=repo&description=kerkerker-config-manager"
+                      target="_blank"
+                      >点击创建 Token</a
+                    >
+                  </p>
+                </div>
+                <div class="form-group">
+                  <label>分支</label>
+                  <input
+                    type="text"
+                    id="github-branch"
+                    placeholder="main"
+                    value="main"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>仓库所有者 <span class="required">*</span></label>
+                  <input
+                    type="text"
+                    id="github-owner"
+                    placeholder="your-username"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>仓库名称 <span class="required">*</span></label>
+                  <input
+                    type="text"
+                    id="github-repo"
+                    placeholder="kerkerker-config-manager"
+                  />
+                </div>
+                <div class="form-group full-width">
+                  <label>上传路径</label>
+                  <input
+                    type="text"
+                    id="github-path"
+                    placeholder="data"
+                    value="data"
+                  />
+                  <p class="hint-small">配置文件将上传到此目录</p>
+                </div>
+              </div>
+              <div class="github-settings-actions">
+                <button class="btn btn-secondary btn-sm" id="test-github-btn">
+                  <i data-lucide="wifi"></i>
+                  <span>测试连接</span>
+                </button>
+                <button class="btn btn-primary btn-sm" id="save-github-btn">
+                  <i data-lucide="save"></i>
+                  <span>保存设置</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="export-section">
+            <h3><i data-lucide="rocket"></i> 导出操作</h3>
+            <p class="hint">选择一种方式导出你的加密配置</p>
+            <div class="export-actions">
+              <button class="btn btn-primary" id="encrypt-copy-btn">
+                <i data-lucide="clipboard-copy"></i>
+                <span>复制加密字符串</span>
+              </button>
+              <button class="btn btn-success" id="encrypt-download-btn">
+                <i data-lucide="download"></i>
+                <span>下载加密文件</span>
+              </button>
+              <button class="btn btn-secondary" id="generate-url-btn">
+                <i data-lucide="link"></i>
+                <span>生成订阅信息</span>
+              </button>
+              <button class="btn btn-github" id="upload-github-btn" disabled>
+                <i data-lucide="upload-cloud"></i>
+                <span>上传到 GitHub</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="encrypted-output"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Toast 通知容器 -->
+    <div id="toast-container"></div>
+
+    <!-- 脚本 -->
+    <script src="js/crypto.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/github.js"></script>
+    <script src="js/components/vod-editor.js"></script>
+    <script src="js/components/shorts-editor.js"></script>
+    <script src="js/components/dm-editor.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- 初始化 Lucide Icons -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        lucide.createIcons();
+      });
+    </script>
+  </body>
 </html>
