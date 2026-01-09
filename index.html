@@ -28,6 +28,42 @@
     />
   </head>
   <body>
+    <!-- 登录遮罩层 -->
+    <div id="auth-overlay" class="auth-overlay">
+      <div class="auth-modal">
+        <div class="auth-logo">
+          <span class="logo-icon"><i data-lucide="shield-check"></i></span>
+          <h2>Kerkerker 配置管理器</h2>
+        </div>
+        <div id="auth-form-container">
+          <!-- 登录表单 -->
+          <div id="login-form" style="display: none;">
+            <p class="auth-hint">请输入访问密码</p>
+            <div class="auth-input-wrapper">
+              <input type="password" id="auth-password" placeholder="输入密码..." />
+              <button class="btn btn-primary" id="auth-submit-btn">
+                <i data-lucide="unlock"></i>
+                <span>登录</span>
+              </button>
+            </div>
+            <p id="auth-error" class="auth-error"></p>
+          </div>
+          <!-- 设置密码表单 -->
+          <div id="setup-form" style="display: none;">
+            <p class="auth-hint">首次使用，请设置访问密码</p>
+            <div class="auth-input-wrapper">
+              <input type="password" id="setup-password" placeholder="设置密码（至少4位）" />
+              <button class="btn btn-success" id="setup-submit-btn">
+                <i data-lucide="check"></i>
+                <span>确认设置</span>
+              </button>
+            </div>
+            <p id="setup-error" class="auth-error"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- 头部 -->
     <header class="header">
       <div class="header-content">
@@ -36,6 +72,10 @@
           <h1>Kerkerker 配置管理器</h1>
           <span class="logo-badge">v2.0</span>
         </div>
+        <button class="btn btn-secondary btn-sm" id="logout-btn" style="display: none;">
+          <i data-lucide="log-out"></i>
+          <span>退出登录</span>
+        </button>
       </div>
     </header>
 
@@ -245,6 +285,7 @@
     <div id="toast-container"></div>
 
     <!-- 脚本 -->
+    <script src="js/auth.js"></script>
     <script src="js/crypto.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/github.js"></script>

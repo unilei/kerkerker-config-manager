@@ -9,6 +9,10 @@ class App {
     }
 
     init() {
+        // 先检查认证状态
+        this.checkAuth();
+        
+        this.bindAuthEvents();
         this.bindTabEvents();
         this.bindExportEvents();
         this.bindPasswordEvents();
@@ -16,6 +20,107 @@ class App {
         this.initEditors();
         this.initGitHubStatus();
         this.showTab('vod');
+    }
+
+    /**
+     * 检查认证状态
+     */
+    checkAuth() {
+        const overlay = document.getElementById('auth-overlay');
+        const loginForm = document.getElementById('login-form');
+        const setupForm = document.getElementById('setup-form');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        if (AuthModule.isAuthenticated()) {
+            // 已登录，隐藏遮罩层
+            overlay.classList.add('hidden');
+            logoutBtn.style.display = 'flex';
+        } else if (AuthModule.isPasswordSet()) {
+            // 已设置密码，显示登录表单
+            loginForm.style.display = 'block';
+            setupForm.style.display = 'none';
+            logoutBtn.style.display = 'none';
+        } else {
+            // 未设置密码，显示设置表单
+            loginForm.style.display = 'none';
+            setupForm.style.display = 'block';
+            logoutBtn.style.display = 'none';
+        }
+
+        // 刷新 Lucide 图标
+        lucide.createIcons();
+    }
+
+    /**
+     * 绑定认证相关事件
+     */
+    bindAuthEvents() {
+        // 登录
+        const authSubmitBtn = document.getElementById('auth-submit-btn');
+        const authPasswordInput = document.getElementById('auth-password');
+        const authError = document.getElementById('auth-error');
+
+        authSubmitBtn.addEventListener('click', async () => {
+            const password = authPasswordInput.value;
+            if (!password) {
+                authError.textContent = '请输入密码';
+                return;
+            }
+
+            const success = await AuthModule.login(password);
+            if (success) {
+                authError.textContent = '';
+                this.checkAuth();
+                App.showToast('登录成功', 'success');
+            } else {
+                authError.textContent = '密码错误';
+                authPasswordInput.value = '';
+            }
+        });
+
+        // 回车登录
+        authPasswordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                authSubmitBtn.click();
+            }
+        });
+
+        // 设置密码
+        const setupSubmitBtn = document.getElementById('setup-submit-btn');
+        const setupPasswordInput = document.getElementById('setup-password');
+        const setupError = document.getElementById('setup-error');
+
+        setupSubmitBtn.addEventListener('click', async () => {
+            const password = setupPasswordInput.value;
+            if (!password || password.length < 4) {
+                setupError.textContent = '密码长度至少为 4 位';
+                return;
+            }
+
+            try {
+                await AuthModule.setAccessPassword(password);
+                setupError.textContent = '';
+                this.checkAuth();
+                App.showToast('密码设置成功', 'success');
+            } catch (error) {
+                setupError.textContent = error.message;
+            }
+        });
+
+        // 回车设置密码
+        setupPasswordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                setupSubmitBtn.click();
+            }
+        });
+
+        // 登出
+        const logoutBtn = document.getElementById('logout-btn');
+        logoutBtn.addEventListener('click', () => {
+            AuthModule.logout();
+            this.checkAuth();
+            App.showToast('已退出登录', 'info');
+        });
     }
 
     initEditors() {

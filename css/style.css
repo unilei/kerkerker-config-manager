@@ -10,51 +10,54 @@
   --bg-tertiary: #1f2937;
   --bg-elevated: #252f3f;
   --bg-hover: #374151;
-  
+
   --text-primary: #f9fafb;
   --text-secondary: #d1d5db;
   --text-muted: #9ca3af;
   --text-disabled: #6b7280;
-  
+
   --border-color: #374151;
   --border-light: #4b5563;
-  
+
   --accent-primary: #6366f1;
   --accent-primary-hover: #4f46e5;
   --accent-primary-light: rgba(99, 102, 241, 0.1);
-  
+
   --accent-success: #10b981;
   --accent-success-hover: #059669;
   --accent-success-light: rgba(16, 185, 129, 0.1);
-  
+
   --accent-warning: #f59e0b;
   --accent-warning-light: rgba(245, 158, 11, 0.1);
-  
+
   --accent-danger: #ef4444;
   --accent-danger-hover: #dc2626;
   --accent-danger-light: rgba(239, 68, 68, 0.1);
-  
+
   --accent-info: #3b82f6;
   --accent-info-light: rgba(59, 130, 246, 0.1);
-  
+
   /* 渐变 */
   --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
   --gradient-dark: linear-gradient(180deg, #111827 0%, #0a0f1a 100%);
-  
+
   /* 阴影 */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4),
+    0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5),
+    0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5),
+    0 10px 10px -5px rgba(0, 0, 0, 0.3);
   --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
-  
+
   /* 圆角 */
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 14px;
   --radius-xl: 20px;
-  
+
   /* 动画 */
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
@@ -72,7 +75,8 @@ html {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
   background: var(--gradient-dark);
   color: var(--text-primary);
   min-height: 100vh;
@@ -236,7 +240,7 @@ body {
 }
 
 .editor-header h2::before {
-  content: '';
+  content: "";
   width: 4px;
   height: 1.5rem;
   background: var(--gradient-primary);
@@ -279,10 +283,14 @@ body {
 }
 
 .btn::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 100%
+  );
   opacity: 0;
   transition: opacity var(--transition-fast);
 }
@@ -399,7 +407,7 @@ body {
 }
 
 .source-item::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -449,7 +457,7 @@ body {
   font-size: 0.75rem;
   padding: 0.25rem 0.6rem;
   border-radius: var(--radius-sm);
-  font-family: 'Monaco', 'Menlo', monospace;
+  font-family: "Monaco", "Menlo", monospace;
   font-weight: 600;
 }
 
@@ -804,7 +812,7 @@ body {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   padding: 1rem;
-  font-family: 'Monaco', 'Menlo', 'Fira Code', monospace;
+  font-family: "Monaco", "Menlo", "Fira Code", monospace;
   font-size: 0.8rem;
   max-height: 200px;
   overflow-y: auto;
@@ -963,7 +971,7 @@ body {
 }
 
 .toast.success::before {
-  content: '✓';
+  content: "✓";
   color: var(--accent-success);
   font-weight: bold;
 }
@@ -974,7 +982,7 @@ body {
 }
 
 .toast.error::before {
-  content: '✕';
+  content: "✕";
   color: var(--accent-danger);
   font-weight: bold;
 }
@@ -985,7 +993,7 @@ body {
 }
 
 .toast.info::before {
-  content: 'ℹ';
+  content: "ℹ";
   color: var(--accent-info);
   font-weight: bold;
 }
@@ -1018,7 +1026,7 @@ body {
 }
 
 .github-status.connected::before {
-  content: '';
+  content: "";
   width: 8px;
   height: 8px;
   background: var(--accent-success);
@@ -1031,8 +1039,13 @@ body {
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .github-settings-form {
@@ -1118,11 +1131,11 @@ body {
   .container {
     padding: 1rem;
   }
-  
+
   .header {
     padding: 1rem;
   }
-  
+
   .logo h1 {
     font-size: 1.1rem;
   }
@@ -1131,7 +1144,7 @@ body {
     flex-direction: column;
     border-radius: var(--radius-lg);
   }
-  
+
   .tab-btn {
     border-radius: var(--radius-md);
   }
@@ -1172,15 +1185,15 @@ body {
   .export-actions .btn {
     width: 100%;
   }
-  
+
   .url-row {
     flex-direction: column;
   }
-  
+
   .export-panel {
     padding: 1.5rem;
   }
-  
+
   .modal-content {
     margin: 0.5rem;
     max-height: calc(100vh - 1rem);
@@ -1194,5 +1207,109 @@ body {
   .btn,
   .modal {
     display: none !important;
+  }
+}
+
+/* 认证界面样式 */
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-primary);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.auth-overlay.hidden {
+  display: none;
+}
+
+.auth-modal {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 3rem;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: var(--shadow-xl);
+  text-align: center;
+}
+
+.auth-logo {
+  margin-bottom: 2rem;
+}
+
+.auth-logo .logo-icon {
+  margin: 0 auto 1rem;
+  width: 64px;
+  height: 64px;
+}
+
+.auth-logo .logo-icon svg {
+  width: 36px;
+  height: 36px;
+}
+
+.auth-logo h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #f9fafb 0%, #d1d5db 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.auth-hint {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.auth-input-wrapper {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.auth-input-wrapper input {
+  flex: 1;
+  padding: 0.875rem 1rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+}
+
+.auth-input-wrapper input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-primary-light);
+}
+
+.auth-input-wrapper input::placeholder {
+  color: var(--text-disabled);
+}
+
+.auth-error {
+  color: var(--accent-danger);
+  font-size: 0.85rem;
+  margin-top: 1rem;
+  min-height: 1.25rem;
+}
+
+@media (max-width: 480px) {
+  .auth-modal {
+    padding: 2rem 1.5rem;
+  }
+
+  .auth-input-wrapper {
+    flex-direction: column;
+  }
+
+  .auth-input-wrapper .btn {
+    width: 100%;
   }
 }
